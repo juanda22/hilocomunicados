@@ -1,0 +1,66 @@
+import java.util.Scanner;
+ 
+public class ej2 {
+ 
+    public static void encontrandoCaminos(char[] secuencia2, int posicionActual, int posicionFinal, int[] caminosValidos, int[] caminosTotales,int indexActual) {
+        if (indexActual == secuencia2.length){//verificamos si el posicion actual y final son la misma, si es asi sumamos 1 camino valido y 1 total
+            caminosTotales[0]++; //sumamos siempre un camino total cuando ya se recorrido la secuencia 2
+            if (posicionActual==posicionFinal){//si las posiciones coinciden sumo el camino valido
+                caminosValidos[0]++;
+            } 
+            return;
+        }
+        if(secuencia2[indexActual]=='+'){//vemos que pasa cuando hay un +
+            encontrandoCaminos(secuencia2, posicionActual+1, posicionFinal, caminosValidos, caminosTotales,indexActual+1);
+        }
+        else if(secuencia2[indexActual]=='-'){//vemos que pasa cuando hay un -
+            encontrandoCaminos(secuencia2, posicionActual-1, posicionFinal, caminosValidos,caminosTotales,indexActual+1);
+        }
+        else{//vemos que pasa cuando no hay ninguno de los dos, o sea un ?
+            //intentamos con +
+            encontrandoCaminos(secuencia2, posicionActual+1, posicionFinal, caminosValidos, caminosTotales,indexActual+1);
+            //intentamos con -
+            encontrandoCaminos(secuencia2, posicionActual-1, posicionFinal, caminosValidos,caminosTotales,indexActual+1);
+        }
+    
+    }
+    
+    
+    public static void main(String[] args){
+    
+        //Creamos scanner para leer lo que nos pasen
+        Scanner scanner = new Scanner(System.in);
+    
+        //leemos las dos secuencias
+        String secuencia1 = scanner.nextLine();
+        String secuencia2 = scanner.nextLine();
+    
+        //pasamos las secuencias de cadenas de char a array de char
+        char[] seqComandada = secuencia1.toCharArray();
+        char[] seqEntendida = secuencia2.toCharArray();
+    
+        int pFinal = 0;
+        
+        //averiguamos posicion final
+        for( char signo : seqComandada){
+            if(signo=='+'){pFinal++;}
+            else{pFinal--;}
+        }
+    
+        int[] caminosValidos = {0}; //iniciamos la cantidad de  caminos validos
+        int[] caminosTotales = {0};//y de caminos totales
+    
+        //llamo a la funcion para contar caminos
+        encontrandoCaminos(seqEntendida, 0, pFinal, caminosValidos, caminosTotales, 0);
+ 
+        if (caminosTotales[0]!=0){//como no sabemos si puede ser que nos den secuencias de longitud 0 damos estos casos y evitamos dividir por 0
+            float proba = (float) caminosValidos[0]/caminosTotales[0];
+    
+            System.out.printf("%.12f\n",proba);//por las dudas 12 digitos
+        } else {
+            System.out.printf("%.12f\n",0);//por las dudas 12 digitos
+            
+        }
+ 
+    }
+}
